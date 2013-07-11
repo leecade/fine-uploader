@@ -6,8 +6,8 @@
 !.gitignore
 Thumbs.db
 
-build/
-dist/
+_build/
+_dist/
 *.zip
 release/*
 master
@@ -23,9 +23,9 @@ test/*.js
 test/upload/*
 test/uploadsTemp/
 test/coverage/*
-test/vendor/*
+test/_vendor/*
 test/uploads/*
-test/temp*
+test/_temp*
 node_modules/
 
 bin/

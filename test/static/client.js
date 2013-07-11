@@ -8,31 +8,26 @@ function FancyJSON(runner) {
         result.durationSec = 0;
         result.passed = true;
 
-        if(suite.title) {
+        if(suite.title)
             result.description = suite.title;
-        }
 
         if(suite.tests.length) {
             result.specs = [];
-            var i = 0;
-            for (i; i < suite.tests.length; i++) {
+            for (var i = 0; i < suite.tests.length; i++) {
 
-                if (!suite.tests[i].pending) {
-                    result.specs.push({
-                        "description": suite.tests[i].title,
-                        "durationSec": (suite.tests[i].duration / 1000) || 0, // duration of spec run in seconds
-                        "passed": suite.tests[i].state === "passed" // did the spec pass?
-                        //"passedCount": 1, // passed assertions in spec
-                        //"failedCount": 0, // failed assertions in spec
-                        //"totalCount": 1 // total assertions in spec
-                    });
+                result.specs.push({
+                    "description": suite.tests[i].title,
+                    "durationSec": (suite.tests[i].duration / 1000) || 0, // duration of spec run in seconds
+                    "passed": suite.tests[i].state === "passed" // did the spec pass?
+                    //"passedCount": 1, // passed assertions in spec
+                    //"failedCount": 0, // failed assertions in spec
+                    //"totalCount": 1 // total assertions in spec
+                });
 
-                    result.durationSec += (suite.tests[i].duration / 1000) || 0;
+                result.durationSec += (suite.tests[i].duration / 1000) || 0;
 
-                    if(suite.tests[i].state !== "passed") {
-                        result.passed = false;
-                    }
-                }
+                if(suite.tests[i].state !== "passed")
+                    result.passed = false;
 
             }
         }
@@ -42,8 +37,7 @@ function FancyJSON(runner) {
             result.suites = [];
 
             var sub = null;
-            var j = 0;
-            for (j; j < suite.suites.length; j++) {
+            for (var j = 0; j < suite.suites.length; j++) {
 
                 sub = {};
                 recurse(suite.suites[j], sub);
@@ -51,9 +45,8 @@ function FancyJSON(runner) {
 
                 result.durationSec += sub.durationSec || 0;
 
-                if(!sub.passed) {
+                if(!sub.passed)
                     result.passed = false;
-                }
 
             }
 
@@ -62,7 +55,7 @@ function FancyJSON(runner) {
     }
 
     runner.on('suite', function(suite) {
-        if(suite.parent.root) { root = suite.parent; }
+        if(suite.parent.root) root = suite.parent;
     });
 
     runner.on('end', function() {
@@ -89,19 +82,24 @@ function mochaSaucePlease(fn) {
 
         // Generate JSON coverage
         mocha.reporter(FancyJSON);
-        var m = new mocha._reporter(runner);
+        new mocha._reporter(runner);
 
         // Generate XUnit coverage
-        //window.xUnitReport = '';
-        //(function() {
-        //    var log = console && console.log;
-        //    console.log = function() {
-        //        window.xUnitReport += arguments[0] + "\n"; // TODO: handle complex console.log
-        //        if(log) log.apply(console, arguments);
-        //    };
-        //})();
+        window.xUnitReport = '';
+        (function() {
+            var log = window.console && console.log;
+
+            if(!window.console) {
+                window.console = {};
+            }
+
+            console.log = function() {
+                window.xUnitReport += arguments[0] + "\n"; // TODO: handle complex console.log
+                if(log && typeof log === 'function') log.apply(console, arguments);
+            };
+        })();
         //mocha.reporter("xunit");
-        //new mocha._reporter(runner);
+        new mocha._reporter(runner);
 
         // The Grid view needs more info about failures
         var failed = [];
@@ -119,13 +117,12 @@ function mochaSaucePlease(fn) {
         // implement custom reporter for console to read back from Sauce
         runner.on('end', function() {
             runner.stats.failed = failed;
-            //runner.stats.xUnitReport = xUnitReport;
+            runner.stats.xUnitReport = xUnitReport;
             runner.stats.jsonReport = jsonReport;
             window.mochaResults = runner.stats;
             window.chocoReady = true;
         });
 
-    }(mocha.run()));
-    //})(window.mochaPhantomJS ? mochaPhantomJS.run() : mocha.run());
+    })(window.mochaPhantomJS ? mochaPhantomJS.run() : mocha.run());
 
 }
