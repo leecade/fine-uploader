@@ -455,7 +455,7 @@ module.exports = (grunt) ->
                     url: 'http://localhost:9001/index.html'
                     name: 'Unit Tests'
             integration:
-                src: ['./test/integration/**/*.coffee']
+                src: ['./test/integration/**/*-test.coffee']
                 options:
                     browsers: browsers.integration
                     name: 'Integration Tests'
