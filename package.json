@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "wd": "git://github.com/admc/wd.git",
-    "mocha-sauce": "git://github.com/feltnerm/mocha-sauce#212442d135d7f04ebdb6cfbee1f8f4bd64bd5297",
+    "mocha-sauce": "git://github.com/feltnerm/mocha-sauce#9d6445f0bc99f9ec3acdd52410cf2e277c26b3bb",
     "express": "~3.2.5",
     "semver": "2.0.x",
     "coffee-script": "~1.6.3",
